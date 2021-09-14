@@ -16,6 +16,18 @@
 # limitations under the License.
 #
 
+PRODUCT_SOONG_NAMESPACES += \
+    vendor/qcom/opensource/commonsys-intf/display
+
+TARGET_SCREEN_HEIGHT := 3200
+TARGET_SCREEN_WIDTH := 1440
+
+BOARD_BOOT_HEADER_VERSION := 3
+
+PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
+
+PRODUCT_SHIPPING_API_LEVEL := 30
+
 LOCAL_PATH := device/xiaomi/star
 
 # A/B
@@ -36,7 +48,10 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-service
 
 PRODUCT_PACKAGES += \
-    bootctrl.lahaina
+    bootctrl.lahaina \
+    qcom_decrypt \
+    qcom_decrypt_fbe
+
 
 #PRODUCT_STATIC_BOOT_CONTROL_HAL := \
 #    bootctrl.lahaina \
@@ -50,3 +65,26 @@ PRODUCT_PACKAGES += \
     update_engine \
     update_verifier \
     update_engine_sideload
+
+
+
+#TEST
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+PLATFORM_SECURITY_PATCH := 2099-12-31
+VENDOR_SECURITY_PATCH := 2099-12-31
+PLATFORM_VERSION := 16.1.0
+
+RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@1.0.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@2.0.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/libdisplayconfig.qti.so \
+    $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/vendor.qti.hardware.vibrator.impl.so \
+    $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/libqtivibratoreffect.so
+
+PRODUCT_COPY_FILES += \
+    $(OUT_DIR)/target/product/star/obj/SHARED_LIBRARIES/libandroidicu_intermediates/libandroidicu.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libandroidicu.so
+
+PRODUCT_COPY_FILES += $(DEVICE_PATH)/prebuilt/dtb.img:$(OUT_DIR)/dtb.img
