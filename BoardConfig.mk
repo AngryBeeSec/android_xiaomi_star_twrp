@@ -16,6 +16,13 @@
 # limitations under the License.
 #
 
+
+# Inherit from sm8350-common
+include device/xiaomi/sm8350-common/BoardConfigCommon.mk
+
+# Inherit proprietary blobs
+-include vendor/xiaomi/venus/BoardConfigVendor.mk
+
 DEVICE_PATH := device/xiaomi/star
 
 # For building with minimal manifest
@@ -41,7 +48,7 @@ TARGET_OTA_ASSERT_DEVICE := star
 
 # File systems
 BOARD_HAS_LARGE_FILESYSTEM := true
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 201326592
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 201326592 # This is the maximum known partition size, but it can be higher, so we just omit it
 BOARD_BOOTIMAGE_PARTITION_SIZE := 201326592
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -76,29 +83,27 @@ TARGET_BOARD_PLATFORM := lahaina
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 
 #COMMENT OUT THIS FOR DIRTY BOOT
-# Bootloader https://github.com/Demon000/device_xiaomi_star/blob/lineage-18.1/BoardConfig.mk
+# Bootloader https://github.com/Demon000/device_xiaomi_venus/blob/lineage-18.1/BoardConfig.mk
 PRODUCT_PLATFORM := star
 TARGET_BOOTLOADER_BOARD_NAME := star
 TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
-TARGET_OTA_ASSERT_DEVICE := star
+# HIDL https://github.com/Demon000/device_xiaomi_venus/blob/lineage-18.1/BoardConfig.mk
+ODM_MANIFEST_FILES := $(DEVICE_PATH)/manifest.xml
+#STOP
 
 # Properties
-TARGET_SYSTEM_PROP += device/xiaomi/sm8350-common/system.prop
-TARGET_VENDOR_PROP += device/xiaomi/sm8350-common/vendor.prop
-TARGET_ODM_PROP += device/xiaomi/sm8350-common/odm.prop
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
+TARGET_ODM_PROP += $(DEVICE_PATH)/odm.prop
 
 # Hack: prevent anti rollback
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
 
-# TWRP Configuration
-TW_THEME := portrait_hdpi
-TW_EXTRA_LANGUAGES := true
-TW_SCREEN_BLANK_ON_BOOT := true
-TW_INPUT_BLACKLIST := "hbtp_vm"
-TW_USE_TOOLBOX := true
+
+#Testing
 TARGET_NO_RECOVERY := true
 BOARD_USES_RECOVERY_AS_BOOT := true
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
@@ -108,3 +113,26 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 # Crypto
 BOARD_USES_QCOM_FBE_DECRYPTION := true
 BOARD_USES_METADATA_PARTITION := true
+
+
+# TWRP Configuration
+TW_SCREEN_BLANK_ON_BOOT := true
+TW_THEME := portrait_hdpi
+RECOVERY_SDCARD_ON_DATA := true
+TARGET_RECOVERY_QCOM_RTC_FIX := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+TW_EXTRA_LANGUAGES := true
+TW_INCLUDE_NTFS_3G := true
+TW_USE_TOOLBOX := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
+TW_MAX_BRIGHTNESS := 2047
+TW_DEFAULT_BRIGHTNESS := 1200
+TW_Y_OFFSET := 88
+TW_H_OFFSET := -88
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
+TW_NO_SCREEN_BLANK := true
+PLATFORM_VERSION := 16.1.0
+TW_HAS_EDL_MODE := true
+TW_SUPPORT_INPUT_1_2_HAPTICS := true
